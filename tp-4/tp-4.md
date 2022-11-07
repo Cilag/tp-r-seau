@@ -1,7 +1,5 @@
 TP4 : TCP, UDP et services réseau
 Sommaire
-TP4 : TCP, UDP et services réseau
-Sommaire
 I. First steps
 II. Mise en place
 1. SSH
@@ -15,17 +13,18 @@ Faites-vous un petit top 5 des applications que vous utilisez sur votre PC souve
 
 🌞 Déterminez, pour ces 5 applications, si c'est du TCP ou de l'UDP
 
-StreamLabs_OBS Ici l'application de StreamLabs utilise le TCP
-
-
+StreamLabs_OBS : TCP
+````
      [Streamlabs OBS.exe]
   TCP    172.20.10.2:14654      52.95.126.138:443    ESTABLISHED
+````
 
 
-League_Of_Legend Ici le jeu utilise le UDP
+League_Of_Legend : UDP
 
 IP : 162.249.73.149 PORT : 5189 PORT SOURCE : 52842
 
+Spotify : TCP
 PS C:\Users\guillaume> netstat -n -b
 
 Connexions actives
@@ -34,6 +33,8 @@ Connexions actives
   TCP    10.33.16.79:62306      104.199.65.124:4070    ESTABLISHED
  [Spotify.exe]
 Spotify
+
+Discord : TCP
 
 PS C:\Users\guillaume> netstat -n -b
 
