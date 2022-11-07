@@ -79,7 +79,7 @@ $ netstat
 
 II. Mise en place
 1. SSH
-🖥️ Machine node1.tp4.b1
+🖥️ node1.tp4.b1
 
 n'oubliez pas de dérouler la checklist (voir les prérequis du TP)
 donnez lui l'adresse IP 10.4.1.11/24
