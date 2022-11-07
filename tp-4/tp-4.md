@@ -19,6 +19,7 @@ Faites-vous un petit top 5 des applications que vous utilisez sur votre PC souve
 🌞 Déterminez, pour ces 5 applications, si c'est du TCP ou de l'UDP
 
 Spotify : TCP
+
 PS C:\Users\guillaume> netstat -n -b
 ```
 Connexions actives
@@ -30,6 +31,7 @@ Connexions actives
 
 League_Of_Legend : UDP
 
+
 IP : 162.249.73.149 PORT : 5189 PORT SOURCE : 52842
 
 StreamLabs_OBS : TCP
@@ -40,6 +42,7 @@ StreamLabs_OBS : TCP
 
 Discord : TCP
 
+
 PS C:\Users\guillaume> netstat -n -b
 
 Connexions actives
@@ -48,6 +51,7 @@ Connexions actives
   TCP    10.33.16.79:53231      199.232.58.249:443     ESTABLISHED
  [Discord.exe]
 Discord
+
 
 Netflix
 
