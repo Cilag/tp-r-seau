@@ -63,13 +63,13 @@ bref il voit tout quoi
 utilisez la commande adaptée à votre OS pour repérer, dans la liste de toutes les connexions réseau établies, la connexion que vous voyez dans Wireshark, pour chacune des 5 applications
 Il faudra ajouter des options adaptées aux commandes pour y voir clair. Pour rappel, vous cherchez des connexions TCP ou UDP.
 
-# MacOS
+ MacOS
 $ netstat
 
-# GNU/Linux
+ GNU/Linux
 $ ss
 
-# Windows
+ Windows
 $ netstat
 🦈 [TRAME](./tp4_spotify.pcapng)
 🦈 [TRAME](./tp4_League_Of_Legend.pcapng)
