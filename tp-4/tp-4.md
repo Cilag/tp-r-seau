@@ -17,8 +17,11 @@ Faites-vous un petit top 5 des applications que vous utilisez sur votre PC souve
 
 StreamLabs_OBS Ici l'application de StreamLabs utilise le TCP
 
+
      [Streamlabs OBS.exe]
   TCP    172.20.10.2:14654      52.95.126.138:443    ESTABLISHED
+
+
 League_Of_Legend Ici le jeu utilise le UDP
 
 IP : 162.249.73.149 PORT : 5189 PORT SOURCE : 52842
@@ -59,7 +62,11 @@ $ ss
 
 # Windows
 $ netstat
-🦈🦈🦈🦈🦈 Bah ouais, captures Wireshark à l'appui évidemment. Une capture pour chaque application, qui met bien en évidence le trafic en question.
+🦈 [TRAME](./)
+🦈 [TRAME](./)
+🦈 [TRAME](./)
+🦈 [TRAME](tp4_discord.pcapng)
+🦈 [TRAME](./)
 
 II. Mise en place
 1. SSH
