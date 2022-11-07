@@ -1,38 +1,42 @@
-TP4 : TCP, UDP et services réseau
-Sommaire
+<H1>TP4 : TCP, UDP et services réseau</H1>
+<H2>Sommaire</H2>
+
 I. First steps
+
 II. Mise en place
 1. SSH
 2. Routage
+
 III. DNS
 1. Présentation
 2. Setup
 3. Test
+
 I. First steps
+
 Faites-vous un petit top 5 des applications que vous utilisez sur votre PC souvent, des applications qui utilisent le réseau : un site que vous visitez souvent, un jeu en ligne, Spotify, j'sais po moi, n'importe.
 
 🌞 Déterminez, pour ces 5 applications, si c'est du TCP ou de l'UDP
+
+Spotify : TCP
+PS C:\Users\guillaume> netstat -n -b
+```
+Connexions actives
+
+  Proto  Adresse locale         Adresse distante       État
+  TCP    10.33.16.79:62306      104.199.65.124:4070    ESTABLISHED
+``` 
+[Spotify.exe]
+
+League_Of_Legend : UDP
+
+IP : 162.249.73.149 PORT : 5189 PORT SOURCE : 52842
 
 StreamLabs_OBS : TCP
 ````
      [Streamlabs OBS.exe]
   TCP    172.20.10.2:14654      52.95.126.138:443    ESTABLISHED
 ````
-
-
-League_Of_Legend : UDP
-
-IP : 162.249.73.149 PORT : 5189 PORT SOURCE : 52842
-
-Spotify : TCP
-PS C:\Users\guillaume> netstat -n -b
-
-Connexions actives
-
-  Proto  Adresse locale         Adresse distante       État
-  TCP    10.33.16.79:62306      104.199.65.124:4070    ESTABLISHED
- [Spotify.exe]
-Spotify
 
 Discord : TCP
 
@@ -63,11 +67,9 @@ $ ss
 
 # Windows
 $ netstat
-🦈 [TRAME](./)
-🦈 [TRAME](./)
-🦈 [TRAME](./)
+🦈 [TRAME](./tp4_spotify.pcapng)
+🦈 [TRAME](./tp4_League_Of_Legend.pcapng)
 🦈 [TRAME](tp4_discord.pcapng)
-🦈 [TRAME](./)
 
 II. Mise en place
 1. SSH
