@@ -55,7 +55,7 @@ Première partie simple, on va avoir besoin de 2 VMs.
 🌞**Générer des requêtes ARP**
 
   ```
- [telos@marcel ~]$ ip a
+ [user@marcel ~]$ ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
@@ -69,20 +69,20 @@ Première partie simple, on va avoir besoin de 2 VMs.
     inet6 fe80::a00:27ff:fec0:9fcf/64 scope link
        valid_lft forever preferred_lft forever
 
-[telos@marcel ~]$ ping 10.3.1.11
+[user@marcel ~]$ ping 10.3.1.11
 PING 10.3.1.11 (10.3.1.11) 56(84) bytes of data.
 64 bytes from 10.3.1.11: icmp_seq=1 ttl=64 time=0.558 ms
 --- 10.3.1.11 ping statistics ---
 1 packets transmitted, 1 received, 0% packet loss, time 0ms
 rtt min/avg/max/mdev = 0.558/0.558/0.558/0.000 ms
 
-[telos@marcel ~]$ ip n s
+[user@marcel ~]$ ip n s
 10.3.1.1 dev enp0s8 lladdr 0a:00:27:00:00:44 REACHABLE
 10.3.1.11 dev enp0s8 lladdr 08:00:27:64:de:2e DELAY
   ```
 
   ```
-  [telos@john ~]$ ip a
+  [user@john ~]$ ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
@@ -96,7 +96,7 @@ rtt min/avg/max/mdev = 0.558/0.558/0.558/0.000 ms
     inet6 fe80::a00:27ff:fe64:de2e/64 scope link
        valid_lft forever preferred_lft forever
 
-[telos@john ~]$ ping 10.3.1.12
+[user@john ~]$ ping 10.3.1.12
 PING 10.3.1.12 (10.3.1.12) 56(84) bytes of data.
 64 bytes from 10.3.1.12: icmp_seq=1 ttl=64 time=0.358 ms
 64 bytes from 10.3.1.12: icmp_seq=2 ttl=64 time=0.681 ms
@@ -104,7 +104,7 @@ PING 10.3.1.12 (10.3.1.12) 56(84) bytes of data.
 2 packets transmitted, 2 received, 0% packet loss, time 1057ms
 rtt min/avg/max/mdev = 0.358/0.519/0.681/0.161 ms
 
-[telos@john ~]$ ip n s
+[user@john ~]$ ip n s
 10.3.1.1 dev enp0s8 lladdr 0a:00:27:00:00:44 REACHABLE
 10.3.1.12 dev enp0s8 lladdr 08:00:27:c0:9f:cf REACHABLE
 
@@ -145,8 +145,8 @@ Vous aurez besoin de 3 VMs pour cette partie. **Réutilisez les deux VMs précé
 🌞**Activer le routage sur le noeud `router`**
 
 ```
-[telos@Routeur ~]$ sudo firewall-cmd --list-all
-[sudo] password for telos:
+[user@Routeur ~]$ sudo firewall-cmd --list-all
+[sudo] password for user:
 public (active)
   target: default
   icmp-block-inversion: no
@@ -164,37 +164,37 @@ public (active)
 ```
 
 ```
-[telos@Routeur ~]$ sudo firewall-cmd --get-active-zone
+[user@Routeur ~]$ sudo firewall-cmd --get-active-zone
 public
   interfaces: enp0s9 enp0s8
 ```
 
 ```
-[telos@Routeur ~]$ sudo firewall-cmd --add-masquerade --zone=public
+[user@Routeur ~]$ sudo firewall-cmd --add-masquerade --zone=public
 success
 ```
 
 ```
-[telos@Routeur ~]$ sudo firewall-cmd --add-masquerade --zone=public --permanent
+[user@Routeur ~]$ sudo firewall-cmd --add-masquerade --zone=public --permanent
 success
 ```
 
 🌞**Ajouter les routes statiques nécessaires pour que `john` et `marcel` puissent se `ping`**
 
 ```
-[telos@John ~]$ ip r s
+[user@John ~]$ ip r s
 10.3.1.0/24 dev enp0s8 proto kernel scope link src 10.3.1.11 metric 100
 10.3.2.0/24 via 10.3.1.254 dev enp0s8
 ```
 
 ```
-[telos@Marcel ~]$ ip r s
+[user@Marcel ~]$ ip r s
 10.3.1.0/24 via 10.3.2.254 dev enp0s8
 10.3.2.0/24 dev enp0s8 proto kernel scope link src 10.3.2.12 metric 100
 ```
 
 ```
-[telos@John ~]$ ping 10.3.2.12
+[user@John ~]$ ping 10.3.2.12
 PING 10.3.2.12 (10.3.2.12) 56(84) bytes of data.
 64 bytes from 10.3.2.12: icmp_seq=1 ttl=63 time=0.785 ms
 64 bytes from 10.3.2.12: icmp_seq=2 ttl=63 time=0.771 ms
@@ -207,19 +207,19 @@ PING 10.3.2.12 (10.3.2.12) 56(84) bytes of data.
 🌞**Analyse des échanges ARP**
 
 ```
-[telos@John ~]$ ip -s n s
+[user@John ~]$ ip -s n s
 10.3.1.10 dev enp0s8 lladdr 0a:00:27:00:00:03 ref 1 used 0/0/0 probes 4 REACHABLE
 10.3.1.254 dev enp0s8 lladdr 08:00:27:3a:d2:16 used 120/120/104 probes 4 STALE
 ```
 
 ```
-[telos@Marcel ~]$ ip -s n s
+[user@Marcel ~]$ ip -s n s
 10.3.2.254 dev enp0s8 lladdr 08:00:27:a2:a0:f7 used 202/200/182 probes 1 STALE
 10.3.2.10 dev enp0s8 lladdr 0a:00:27:00:00:04 ref 1 used 2/2/4 probes 4 DELAY
 ```
 
 ```
-[telos@Routeur ~]$ ip -s n s
+[user@Routeur ~]$ ip -s n s
 10.3.2.12 dev enp0s9 lladdr 08:00:27:e8:fc:9f used 138/138/96 probes 4 STALE
 10.3.1.11 dev enp0s8 lladdr 08:00:27:93:6c:7d used 135/133/116 probes 1 STALE
 10.3.1.10 dev enp0s8 lladdr 0a:00:27:00:00:03 ref 1 used 0/0/3 probes 4 DELAY
