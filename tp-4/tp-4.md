@@ -30,7 +30,7 @@ Faites-vous un petit top 5 des applications que vous utilisez sur votre PC souve
 PS C:\Users\guillaume> netstat -n -b
 Connexions actives
   Proto  Adresse locale         Adresse distante       État
-  TCP    10.33.16.79:62306      104.199.65.124:4070    ESTABLISHED
+  TCP    10.33.16.125:62306      104.199.65.124:4070    ESTABLISHED
  [Spotify.exe]
 ```
 🦈 [Discord](./tp4_discord.pcapng)
@@ -38,7 +38,7 @@ Connexions actives
 PS C:\Users\guillaume> netstat -n -b
 Connexions actives
   Proto  Adresse locale         Adresse distante       État
-  TCP    10.33.16.79:53231      199.232.58.249:443     ESTABLISHED
+  TCP    10.33.16.125:53231      199.232.58.249:443     ESTABLISHED
  [Discord.exe]
 ```
 
@@ -46,7 +46,7 @@ Connexions actives
 
 ```
      [Streamlabs OBS.exe]
-  TCP    172.20.10.2:14654      52.95.126.138:443    ESTABLISHED
+  TCP    172.20.10.56:14654      52.95.126.138:443    ESTABLISHED
 ```
 
 🦈 [Netflix](./tp4_netflix.pcapng)
