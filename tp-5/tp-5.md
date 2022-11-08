@@ -35,8 +35,17 @@ On va utiliser GNS3 dans ce TP pour se rapprocher d'un cas réel. On va focus su
 
 🌞 **Commençons simple**
 
-- définissez les IPs statiques sur les deux VPCS
-- `ping` un VPCS depuis l'autre
+- ouvrir la console puis regarder l'adresse ip puis la modifier avec la comande ip 10.5.1.1/24
+-
+```
+PC1> ping 10.5.1.2
+
+84 bytes from 10.5.1.2 icmp_seq=1 ttl=64 time=1.356 ms
+84 bytes from 10.5.1.2 icmp_seq=2 ttl=64 time=0.820 ms
+84 bytes from 10.5.1.2 icmp_seq=3 ttl=64 time=2.666 ms
+84 bytes from 10.5.1.2 icmp_seq=4 ttl=64 time=6.765 ms
+84 bytes from 10.5.1.2 icmp_seq=5 ttl=64 time=0.986 ms
+```
 
 > Jusque là, ça devrait aller. Noter qu'on a fait aucune conf sur le switch. Tant qu'on ne fait rien, c'est une bête multiprise.
 
@@ -68,20 +77,108 @@ Le principe est simple :
 
 🌞 **Adressage**
 
-- définissez les IPs statiques sur tous les VPCS
-- vérifiez avec des `ping` que tout le monde se ping
+- 
+```
+PC1> sh
+
+NAME   IP/MASK              GATEWAY           MAC                LPORT  RHOST:PORT
+PC1    10.5.10.1/24         0.0.0.0           00:50:79:66:68:00  20004  127.0.0.1:20005
+       fe80::250:79ff:fe66:6800/64
+
+PC1> ping 10.5.10.2
+
+84 bytes from 10.5.10.2 icmp_seq=1 ttl=64 time=0.892 ms
+84 bytes from 10.5.10.2 icmp_seq=2 ttl=64 time=1.139 ms
+84 bytes from 10.5.10.2 icmp_seq=3 ttl=64 time=0.605 ms
+84 bytes from 10.5.10.2 icmp_seq=4 ttl=64 time=0.874 ms
+84 bytes from 10.5.10.2 icmp_seq=5 ttl=64 time=1.115 ms
+
+PC1> ping 10.5.10.3
+
+84 bytes from 10.5.10.3 icmp_seq=1 ttl=64 time=1.405 ms
+84 bytes from 10.5.10.3 icmp_seq=2 ttl=64 time=1.219 ms
+84 bytes from 10.5.10.3 icmp_seq=3 ttl=64 time=0.901 ms
+84 bytes from 10.5.10.3 icmp_seq=4 ttl=64 time=1.180 ms
+84 bytes from 10.5.10.3 icmp_seq=5 ttl=64 time=1.104 ms
+
+PC1>
+```
+- 
+```
+PC2> sh
+
+NAME   IP/MASK              GATEWAY           MAC                LPORT  RHOST:PORT
+PC2    10.5.10.2/24         0.0.0.0           00:50:79:66:68:01  20006  127.0.0.1:20007
+       fe80::250:79ff:fe66:6801/64
+
+PC2> ping 10.5.10.3
+
+84 bytes from 10.5.10.3 icmp_seq=1 ttl=64 time=1.551 ms
+84 bytes from 10.5.10.3 icmp_seq=2 ttl=64 time=0.963 ms
+84 bytes from 10.5.10.3 icmp_seq=3 ttl=64 time=0.976 ms
+84 bytes from 10.5.10.3 icmp_seq=4 ttl=64 time=0.724 ms
+84 bytes from 10.5.10.3 icmp_seq=5 ttl=64 time=0.249 ms
+
+PC2>
+```
 
 🌞 **Configuration des VLANs**
 
-- référez-vous [à la section VLAN du mémo Cisco](../../cours/memo/memo_cisco.md#8-vlan)
-- déclaration des VLANs sur le switch `sw1`
-- ajout des ports du switches dans le bon VLAN (voir [le tableau d'adressage de la topo 2 juste au dessus](#2-adressage-topologie-2))
-  - ici, tous les ports sont en mode *access* : ils pointent vers des clients du réseau
+- 
+```
+IOU1#show vlan br
 
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Et0/0, Et0/1, Et0/2, Et0/3
+                                                Et1/3, Et2/0, Et2/1, Et2/2
+                                                Et2/3, Et3/0, Et3/1, Et3/2
+                                                Et3/3
+10   admins                           active    Et1/0, Et1/1
+20   guests                           active    Et1/2
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+IOU1#
+
+```
 🌞 **Vérif**
 
-- `pc1` et `pc2` doivent toujours pouvoir se ping
-- `pc3` ne ping plus personne
+- 
+```
+PC1> ping 10.5.10.2
+
+84 bytes from 10.5.10.2 icmp_seq=1 ttl=64 time=1.450 ms
+84 bytes from 10.5.10.2 icmp_seq=2 ttl=64 time=1.201 ms
+84 bytes from 10.5.10.2 icmp_seq=3 ttl=64 time=1.319 ms
+84 bytes from 10.5.10.2 icmp_seq=4 ttl=64 time=1.165 ms
+84 bytes from 10.5.10.2 icmp_seq=5 ttl=64 time=0.952 ms
+
+PC1> ping 10.5.10.3
+
+host (10.5.10.3) not reachable
+
+PC1>
+```
+- 
+```
+PC3> sh
+
+NAME   IP/MASK              GATEWAY           MAC                LPORT  RHOST:PORT
+PC3    10.5.10.3/24         0.0.0.0           00:50:79:66:68:02  20010  127.0.0.1:20011
+       fe80::250:79ff:fe66:6802/64
+
+PC3> ping 10.5.10.1
+
+host (10.5.10.1) not reachable
+
+PC3> ping 10.5.10.2
+
+host (10.5.10.2) not reachable
+
+PC3>
+```
 
 # III. Routing
 
