@@ -223,14 +223,42 @@ L'adresse des machines au sein de ces réseaux :
 
 🌞 **Adressage**
 
-- définissez les IPs statiques sur toutes les machines **sauf le *routeur***
+- 
+```
+ip 10.5.10.1/24 10.5.10.254
+Checking for duplicate address...
+PC1 : 10.5.10.1 255.255.255.0 gateway 10.5.10.254
+
+PC2> ip 10.5.10.2/24 10.5.10.254
+Checking for duplicate address...
+PC1 : 10.5.10.2 255.255.255.0 gateway 10.5.10.254
+
+admin> ip 10.5.20.1/24 10.5.20.254
+Checking for duplicate address...
+PC1 : 10.5.20.1 255.255.255.0 gateway 10.5.20.254
+
+[user@localhost]$ inet 10.5.30.1/24 brd 10.5.30.255
+```
 
 🌞 **Configuration des VLANs**
+- 
+```
+IOU1#show vlan br
 
-- référez-vous au [mémo Cisco](../../cours/memo/memo_cisco.md#8-vlan)
-- déclaration des VLANs sur le switch `sw1`
-- ajout des ports du switches dans le bon VLAN (voir [le tableau d'adressage de la topo 2 juste au dessus](#2-adressage-topologie-2))
-- il faudra ajouter le port qui pointe vers le *routeur* comme un *trunk* : c'est un port entre deux équipements réseau (un *switch* et un *routeur*)
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Et0/1, Et0/2, Et0/3, Et2/0
+                                                Et2/1, Et2/2, Et2/3, Et3/0
+                                                Et3/1, Et3/2, Et3/3
+10   clients                          active    Et1/0, Et1/1
+20   admins                           active    Et1/2
+30   server                           active    Et1/3
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+IOU1#
+```
 
 ---
 
@@ -260,16 +288,91 @@ R1(config-subif)# exit
 
 🌞 **Config du *routeur***
 
-- attribuez ses IPs au *routeur*
-  - 3 sous-interfaces, chacune avec son IP et un VLAN associé
+-
+```
+R1(config)#interface fastethernet 0/0.10
+R1(config-subif)#encapsulation dot1q 10
+R1(config-subif)#
+*Mar  1 00:09:08.695: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+R1(config-subif)#ip address 10.5.10.254 255.255.255.0
+R1(config-subif)#no shutdown
+R1(config-subif)#end
+R1#
+*Mar  1 00:11:37.703: %SYS-5-CONFIG_I: Configured from console by console
+R1#wr
+Building configuration...
+[OK]
+R1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1(config)#interface fastethernet 0/0.20
+R1(config-subif)#encapsulation dot1q 20
+R1(config-subif)#ip address 10.5.20.254 255.255.255.0
+R1(config-subif)#no shutdown
+R1(config-subif)#end
+R1#wr
+*Mar  1 00:12:43.031: %SYS-5-CONFIG_I: Configured from console by console
+R1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1(config)#interface fastethernet 0/0.30
+R1(config-subif)#encapsulation dot1q 30
+R1(config-subif)#ip address 10.5.30.254 255.255.255.0
+R1(config-subif)#no shutdown
+R1(config-subif)#end
+R1#wr
+*Mar  1 00:13:33.835: %SYS-5-CONFIG_I: Configured from console by console
+R1#wr
+Building configuration...
+[OK]
+R1#
+```
 
 🌞 **Vérif**
 
-- tout le monde doit pouvoir ping le routeur sur l'IP qui est dans son réseau
-- en ajoutant une route vers les réseaux, ils peuvent se ping entre eux
-  - ajoutez une route par défaut sur les VPCS
-  - ajoutez une route par défaut sur la machine virtuelle
-  - testez des `ping` entre les réseaux
+- 
+```
+PC1> ping 10.5.20.1
+10.5.20.1 icmp_seq=1 timeout
+84 bytes from 10.5.20.1 icmp_seq=2 ttl=63 time=18.968 ms
+84 bytes from 10.5.20.1 icmp_seq=3 ttl=63 time=17.151 ms
+84 bytes from 10.5.20.1 icmp_seq=4 ttl=63 time=19.776 ms
+84 bytes from 10.5.20.1 icmp_seq=5 ttl=63 time=19.312 ms
+
+PC1> ping 10.5.30.1
+10.5.30.1 icmp_seq=1 timeout
+84 bytes from 10.5.30.1 icmp_seq=2 ttl=63 time=18.320 ms
+84 bytes from 10.5.30.1 icmp_seq=3 ttl=63 time=19.562 ms
+84 bytes from 10.5.30.1 icmp_seq=4 ttl=63 time=19.590 ms
+84 bytes from 10.5.30.1 icmp_seq=5 ttl=63 time=17.234 ms
+
+PC1>
+PC1> ping 10.5.10.2
+84 bytes from 10.5.10.2 icmp_seq=1 ttl=64 time=1.531 ms
+84 bytes from 10.5.10.2 icmp_seq=2 ttl=64 time=2.022 ms
+84 bytes from 10.5.10.2 icmp_seq=3 ttl=64 time=1.558 ms
+84 bytes from 10.5.10.2 icmp_seq=4 ttl=64 time=2.108 ms
+84 bytes from 10.5.10.2 icmp_seq=5 ttl=64 time=2.138 ms
+
+PC2> ping 10.5.20.1
+10.5.20.1 icmp_seq=1 timeout
+10.5.20.1 icmp_seq=2 timeout
+84 bytes from 10.5.20.1 icmp_seq=3 ttl=63 time=21.978 ms
+84 bytes from 10.5.20.1 icmp_seq=4 ttl=63 time=18.782 ms
+84 bytes from 10.5.20.1 icmp_seq=5 ttl=63 time=17.064 ms
+
+PC2> ping 10.5.30.1
+84 bytes from 10.5.30.1 icmp_seq=1 ttl=63 time=19.893 ms
+84 bytes from 10.5.30.1 icmp_seq=2 ttl=63 time=19.051 ms
+84 bytes from 10.5.30.1 icmp_seq=3 ttl=63 time=17.953 ms
+84 bytes from 10.5.30.1 icmp_seq=4 ttl=63 time=18.425 ms
+84 bytes from 10.5.30.1 icmp_seq=5 ttl=63 time=19.051 ms
+
+admin> ping 10.5.30.1
+84 bytes from 10.5.30.1 icmp_seq=1 ttl=63 time=14.275 ms
+84 bytes from 10.5.30.1 icmp_seq=2 ttl=63 time=17.913 ms
+84 bytes from 10.5.30.1 icmp_seq=3 ttl=63 time=15.055 ms
+84 bytes from 10.5.30.1 icmp_seq=4 ttl=63 time=17.285 ms
+84 bytes from 10.5.30.1 icmp_seq=5 ttl=63 time=18.599 ms
+```
 
 # IV. NAT
 
